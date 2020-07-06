@@ -1,0 +1,15 @@
+<template include="./view/htm/my_thread.template.htm">
+	<slot name="my_body">
+		<ul class="list-unstyled threadlist mb-0">
+			<?php include _include(APP_PATH.'view/htm/thread_list.inc.htm');?>
+		</ul>
+		
+		<?php if($pagination) { ?>
+		<nav><ul class="pagination justify-content-center flex-wrap"><?php echo $pagination; ?></ul></nav>
+		<?php } ?>
+	</slot>
+</template>
+
+<script>
+$('a[data-active="my-thread"]').addClass('active');
+</script>

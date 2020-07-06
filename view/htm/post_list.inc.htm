@@ -1,0 +1,76 @@
+				<?php
+					empty($allowupdate) AND $allowupdate = 0;
+					empty($allowdelete) AND $allowdelete = 0;
+					empty($allowpost) AND $allowpost = 0;
+				?>
+				<!--{hook post_list_inc_start.htm}-->
+
+				<?php if($postlist) { foreach($postlist as $_post) { ?>
+					<li class="media <?php echo $_post['classname'];?>" data-pid="<?php echo $_post['pid'];?>" data-uid="<?php echo $_post['uid'];?>">
+						<a href="<?php echo url("user-$_post[uid]");?>" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="<?php echo $_post['user_avatar_url'];?>">
+						</a>
+						<!--{hook post_list_inc_avatar_after.htm}-->
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									<!--{hook post_list_inc_username_before.htm}-->
+									<span class="username">
+										<a href="<?php echo url("user-$_post[uid]");?>" class="text-muted font-weight-bold"><?php echo $_post['username'];?></a>
+									</span>
+									<!--{hook post_list_inc_username_after.htm}-->
+									
+									<!--{hook post_list_inc_create_date_before.htm}-->
+									<span class="date text-grey ml-2"><?php echo $_post['create_date_fmt'];?></span>
+									<!--{hook post_list_inc_create_date_after.htm}-->
+								</div>
+								<div class="text-right text-grey">
+									<!--{hook post_list_inc_quote_before.htm}-->
+									<?php if($allowpost) { ?>
+									<a href="javascript:void(0)" data-tid="<?php echo $_post['tid'];?>" data-pid="<?php echo $_post['pid'];?>" class="text-grey post_reply mr-3"><i class="icon-reply" title="<?php echo lang('quote');?>"></i> <span class="d-none"><?php echo lang('quote');?></span></a>
+									<?php } ?>
+									<!--{hook post_list_inc_quote_after.htm}-->
+									
+									<!--{hook post_list_inc_update_before.htm}-->
+									<?php if($allowupdate || $_post['allowupdate']) { ?>
+									<a href="<?php echo url("post-update-$_post[pid]");?>" class="text-grey post_update mr-3"><i class="icon-edit" title="<?php echo lang('edit');?>"></i> <span class="d-none"><?php echo lang('edit');?></span></a>
+									<?php } ?>
+									<!--{hook post_list_inc_update_after.htm}-->
+								
+									<!--{hook post_list_inc_delete_before.htm}-->
+									<?php if($allowdelete || $_post['allowdelete']) { ?>
+									<a data-href="<?php echo url("post-delete-$_post[pid]");?>" data-confirm-text="<?php echo lang('confirm_delete');?>" href="javascript:void(0);" class="text-grey post_delete _confirm mr-3"><i class="icon-remove" title="<?php echo lang('delete');?>"></i> <span class="d-none"><?php echo lang('delete');?></span></a>
+									<?php } ?>
+									<!--{hook post_list_inc_delete_after.htm}-->
+									
+									<!--{hook post_list_inc_floor_before.htm}-->
+									<?php if($_post['floor']) { ?>
+									<span class="floor-parent">
+										<span class="floor mr-0"><?php echo $_post['floor'];?></span><?php echo lang('floor');?>
+									</span>
+									<?php } ?>
+									<!--{hook post_list_inc_floor_after.htm}-->
+								</div>
+							</div>
+							<div class="message mt-1 break-all">
+							
+								<!--{hook post_list_inc_subject_before.htm}-->
+								<?php if(!empty($_post['subject'])) { ?>
+									<h6><a href="<?php echo url("thread-$_post[tid]");?>" target="_blank"><?php echo $_post['subject'];?></a></h6>
+								<?php } ?>
+								<!--{hook post_list_inc_subject_after.htm}-->
+								
+								<!--{hook post_list_inc_message_before.htm}-->
+								<?php echo $_post['message_fmt'];?>
+								<!--{hook post_list_inc_message_after.htm}-->
+								
+								<!--{hook post_list_inc_filelist_before.htm}-->
+								<?php echo post_file_list_html($_post['filelist']);?>
+								<!--{hook post_list_inc_filelist_after.htm}-->
+								
+							</div>
+						</div>
+					</li>
+				<?php }} ?>
+				
+				<!--{hook post_list_inc_end.htm}-->

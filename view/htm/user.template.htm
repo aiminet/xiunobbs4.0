@@ -1,0 +1,13 @@
+<template include="./view/htm/user.common.template.htm">
+	<slot name="user_nav">
+		<ul class="nav nav-tabs card-header-tabs">
+			<!--{hook user_nav_profile_before.htm}-->
+			<li class="nav-item">
+				<a class="nav-link" href="<?php echo url("user-$_uid");?>" data-active="user-profile"><?php echo lang('my_basic_profile');?></a>
+			</li>
+			<!--{hook user_nav_profile_after.htm}-->
+		</ul>
+	</slot>
+</template>
+
+<script>$('a[data-active="menu-user"]').addClass('active');</script>

@@ -1,0 +1,37 @@
+<template include="./view/htm/user.template.htm">
+	<slot name="user_body">
+		<div class="row line-height-4">
+			<div class="col-md-2 col-sm-12 text-center">
+				<img class="logo-4" src="<?php echo $_user['avatar_url'];?>">
+				<br><b><?php echo $_user['username'];?> </b>
+				<!--{hook user_profile_username_after.htm}-->
+			</div>
+			<div class="col-4 col-sm-5">
+				<span class="text-muted"><?php echo lang('threads');?>：</span><?php echo $_user['threads'];?>
+				<br><span class="text-muted"><?php echo lang('posts');?>：</span><?php echo $_user['posts'];?>
+				<!--{hook user_profile_posts_after.htm}-->
+			</div>
+			<div class="col-auto">
+				<span class="text-muted"><?php echo lang('user_group');?>：</span><?php echo $_user['groupname'];?>
+				<br><span class="text-muted"><?php echo lang('create_date');?>：</span><?php echo $_user['create_date_fmt'];?>
+				<br><span class="text-muted"><?php echo lang('last_login_date');?>：</span><?php echo $_user['login_date_fmt'];?>
+				<?php if($gid == 1) { ?>
+				<br><span class="text-danger"><?php echo lang('email');?>：</span><?php echo $_user['email'];?><br>
+				<?php } ?>
+				
+				<!--{hook user_profile_login_date_after.htm}-->
+			</div>
+		</div>
+		
+		<?php if(!empty($group['allowdeleteuser'])) { ?>
+			<a role="button" class="btn btn-danger confirm btn-block my-3" data-confirm-text="<?php echo lang('confirm_delete_user');?>" data-method="post" href="<?php echo url("mod-deleteuser-$_user[uid]");?>"><?php echo lang('delete_user');?></a>
+		<?php } ?>
+		
+		<!--{hook user_index_delete_user_button_after.htm}-->
+		
+	</slot>
+</template>
+
+<script>
+$('a[data-active="user-profile"]').addClass('active');
+</script>

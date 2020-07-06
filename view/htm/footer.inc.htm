@@ -1,0 +1,60 @@
+<?php $db = G('db');?>
+<?php $starttime = G('starttime');?>
+<?php $time = G('time');?>
+<?php $ip = G('ip');?>
+<?php $useragent = G('useragent');?>
+<?php $forumlist = G('forumlist');?>
+<?php $forumarr = G('forumarr');?>
+<?php $fid = G('fid');?>
+<?php $conf = G('conf');?>
+<?php $static_version = $conf['static_version'];?>
+				
+			<!--{hook footer_start.htm}-->
+		
+			<?php  echo xn_debug_info(); ?>
+	
+		</div>
+	</main>
+	
+	<!--{hook footer_nav_before.htm}-->
+	
+	<?php include _include(APP_PATH.'view/htm/footer_nav.inc.htm');?>
+	
+	<!--{hook footer_nav_after.htm}-->
+	
+	<!--[if ltg IE 9]>
+	<script>window.location = '<?php echo url('browser');?>';</script>
+	<![endif]-->
+	
+	<!--{hook footer_js_before.htm}-->
+	
+	<?php $browser = get__browser();?>
+	<?php if($browser['name'] == 'ie') { ?>
+	<script src="<?php echo $conf['view_url'];?>js/es6-shim.js<?php echo $static_version;?>"></script>
+	<?php } ?>
+	<script src="lang/<?php echo $conf['lang'];?>/bbs.js<?php echo $static_version;?>"></script>
+	<script src="<?php echo $conf['view_url'];?>js/jquery-3.1.0.js<?php echo $static_version;?>"></script>
+	<script src="<?php echo $conf['view_url'];?>js/popper.js<?php echo $static_version;?>"></script>
+	<script src="<?php echo $conf['view_url'];?>js/bootstrap.js<?php echo $static_version;?>"></script>
+	<script src="<?php echo $conf['view_url'];?>js/xiuno.js<?php echo $static_version;?>"></script>
+	<script src="<?php echo $conf['view_url'];?>js/bootstrap-plugin.js<?php echo $static_version;?>"></script>
+	<script src="<?php echo $conf['view_url'];?>js/async.js<?php echo $static_version;?>"></script>
+	<script src="<?php echo $conf['view_url'];?>js/form.js<?php echo $static_version;?>"></script>
+	<script>
+	var debug = DEBUG = <?php echo DEBUG; ?>;
+	var url_rewrite_on = <?php echo $conf['url_rewrite_on'];?>;
+	var forumarr = <?php echo xn_json_encode($forumarr);?>;
+	var fid = <?php echo $fid;?>;
+	var uid = <?php echo intval($uid);?>;
+	var gid = <?php echo intval($gid);?>;
+	xn.options.water_image_url = '<?php echo $conf['logo_water_url'];?>';	// 水印图片 / watermark image
+	</script>
+	<script src="<?php echo $conf['view_url'];?>js/bbs.js<?php echo $static_version;?>"></script>
+	<!--{hook footer_js_after.htm}-->
+	
+</body>
+<!--{hook footer_body_after.htm}-->
+</html>
+<!--{hook footer_end.htm}-->
+
+<?php echo cron_run();?>

@@ -1,0 +1,310 @@
+<?php include _include(APP_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook thread_start.htm}-->
+
+<div class="row">
+	<div class="col-lg-9 main">
+		<!--{hook thread_breadcrumb_before.htm}-->
+		<?php if(empty($hide_breadcrumb)) { ?>
+		<ol class="breadcrumb d-none d-md-flex">
+			<li class="breadcrumb-item"><a href="./" aria-label="<?php echo lang('index_page');?>"><i class="icon-home"></i></a></li>
+			<li class="breadcrumb-item"><a href="<?php echo url("forum-$fid");?>"><?php echo $forum['name'];?></a></li>
+			<li class="breadcrumb-item active"><a href="<?php echo url("thread-$tid");?>" title="<?php echo lang('index_page');?>返回主题第一页"><?php echo $thread['subject'];?></a></li>
+			<!--{hook thread_breadcrumb.htm}-->
+		</ol>
+		<?php } ?>
+		<!--{hook thread_breadcrumb_after.htm}-->
+		
+		<div class="card card-thread">
+			<div class="card-body">
+				<div class="media">
+					<a href="<?php echo url("user-$thread[uid]");?>" tabindex="-1">
+						<img class="avatar-3 mr-3" src="<?php echo $thread['user_avatar_url'];?>">
+					</a>
+					<div class="media-body">
+						<!--{hook thread_subject_before.htm}-->
+						<h4 class="break-all">
+							<!--{hook thread_subject_start.htm}-->
+							<?php echo $thread['subject'];?>
+							<!--{hook thread_subject_end.htm}-->
+						</h4>
+						<!--{hook thread_subject_after.htm}-->
+						<div class="d-flex justify-content-between small">
+							<div>
+								<!--{hook thread_username_before.htm}-->
+								<span class="username">
+									<a href="<?php echo url("user-$thread[uid]");?>" class="text-muted font-weight-bold"><?php echo $thread['username'];?></a>
+								</span>
+								<span class="date text-grey ml-2"><?php echo $thread['create_date_fmt'];?></span>
+								<span class="text-grey ml-2"><i class="icon-eye"></i> <?php echo $thread['views'];?></span>
+								<!--{hook thread_views_after.htm}-->
+							</div>
+							<div>
+								<!--{hook thread_update_before.htm}-->
+								<?php if($allowupdate || $first['allowupdate']) { ?>
+								<a href="<?php echo url("post-update-$thread[firstpid]");?>" class="text-grey mr-2 post_update"><i class="icon-edit"></i> <?php echo lang('edit');?></a>
+								<?php } ?>
+								
+								<?php if($allowdelete || $first['allowdelete']) { ?>
+								<a data-href="<?php echo url("post-delete-$thread[firstpid]");?>" href="javascript:void(0);" class="text-grey post_delete" isfirst="1"><i class="icon-remove"></i> <?php echo lang('delete');?></a>
+								<?php } ?>
+								<!--{hook thread_delete_after.htm}-->
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr />
+				<div class="message break-all" isfirst="1">
+				<?php if($page == 1) { ?>
+				
+					<!--{hook thread_message_before.htm}-->
+					<?php echo $first['message_fmt'];?>
+					<!--{hook thread_message_after.htm}-->
+					
+					<?php echo post_file_list_html($first['filelist']);?>
+					<!--{hook thread_filelist_after.htm}-->
+					
+				<?php } else { ?>
+				
+					<!--{hook thread_message_more_before.htm}-->
+					<p><a href="<?php echo url("thread-$tid");?>"><?php echo lang('view_thread_message');?></a></p>
+					<!--{hook thread_message_more_after.htm}-->
+					
+				<?php } ?>
+				</div>
+
+				<!--{hook thread_plugin_before.htm}-->
+				<div class="plugin d-flex justify-content-center mt-3">
+					<!--{hook thread_plugin_body.htm}-->
+				</div>
+				<!--{hook thread_plugin_after.htm}-->
+
+			</div>
+		</div>
+		
+		<!--{hook thread_postlist_before.htm}-->
+		
+		<div class="card card-postlist">
+			<div class="card-body">
+				<div class="card-title">
+					<div class="d-flex justify-content-between">
+						<div>
+							<b><?php echo lang('new_post');?></b> (<span class="posts"><?php echo $thread['posts'];?></span>)
+						</div>
+						<!--{hook thread_post_list_title_middle.htm}-->
+						<div>
+							<!--{hook thread_post_list_title_right.htm}-->
+						</div>
+					</div>
+				</div>
+				<ul class="list-unstyled postlist">
+					<?php include _include(APP_PATH.'view/htm/post_list.inc.htm'); ?>
+					
+					<?php if(!empty($user)) { ?>
+					<li class="post newpost media">
+						<a href="<?php echo url("user-$user[uid]");?>" class="mr-3" tabindex="-1">
+							<img class="avatar-3" src="<?php echo $user['avatar_url'];?>">
+						</a>
+						<div class="media-body">
+							<div class="d-flex justify-content-between small text-muted">
+								<div>
+									<div><?php echo $user['username'];?></div>
+								</div>
+								<div>
+									<span class="floor" id="newfloor"><?php echo ($thread['posts'] + 2);?></span><?php echo lang('floor');?>
+								</div>
+							</div>
+							<div>
+								<form action="<?php echo url("post-create-$tid-1");?>" method="post" id="quick_reply_form" class="d-block">	
+									<input type="hidden" name="doctype" value="1" />
+									<input type="hidden" name="return_html" value="1" />
+									<input type="hidden" name="quotepid" value="0" />
+									<!--{hook thread_quick_reply_message_before.htm}-->
+									<div class="message mt-1">
+										<textarea class="form-control" placeholder="<?php echo lang('message');?>" name="message" id="message"></textarea>
+									</div>
+									<!--{hook thread_quick_reply_message_after.htm}-->
+									<div class="text-muted mt-2 small">
+										<div class="d-flex justify-content-between">
+											<div>
+												<!--{hook thread_quick_reply_left_start.htm}-->
+												<button type="submit" class="btn btn-sm btn-secondary" id="submit" data-loading-text="<?php echo lang('submiting');?>..."> <?php echo lang('post_create');?> </button>
+												<!--{hook thread_quick_reply_left_end.htm}-->
+											</div>
+											<div>
+												<!--{hook thread_quick_reply_right_start.htm}-->
+												<a class="icon-mail-forward text-muted" href="<?php echo url("post-create-$tid");?>" id="advanced_reply"> <?php echo lang('advanced_reply');?></a>
+												<!--{hook thread_quick_reply_right_end.htm}-->
+											</div>
+										</div>
+									</div>
+									<!--{hook thread_quick_reply_submit_after.htm}-->
+								</form>
+							</div>
+						</div>
+					</li>
+					<?php } ?>
+							
+				</ul>
+			</div>
+		</div>
+		<!--{hook thread_postlist_after.htm}-->
+		
+		<div class="d-none threadlist"><input type="checkbox" name="modtid" value="<?php echo $thread['tid']; ?>" checked /></div>
+		<?php include _include(APP_PATH.'view/htm/thread_list_mod.inc.htm');?>
+		
+		<?php if($pagination) { ?>
+		<nav><ul class="pagination my-4 justify-content-center flex-wrap"><?php echo $pagination; ?></ul></nav>
+		<?php }?>
+		
+		<!--{hook thread_page_after.htm}-->
+		
+		<a role="button" class="btn btn-secondary btn-block xn-back col-lg-6 mx-auto mb-3" href="javascript:history.back();"><?php echo lang('back');?></a>
+		
+	</div>
+	<div class="col-lg-3 d-none d-lg-block aside">
+	
+		<a role="button" class="btn btn-primary btn-block mb-3" href="<?php echo url('thread-create-'.$fid);?>"><?php echo lang('thread_create_new');?></a>
+		
+		<div class="card card-user-info">
+			<div class="m-3 text-center">
+				<a href="<?php echo url("user-$thread[uid]");?>" tabindex="-1">
+					<img class="avatar-5" src="<?php echo $thread['user_avatar_url'];?>">
+				</a>
+				<h5><a href="<?php echo url("user-".$thread['user']['uid']);?>"><?php echo $thread['user']['username'];?></a></h5>
+				<!--{hook thread_user_username_after.htm}-->
+			</div>
+			<div class="card-footer p-2">
+				<table class="w-100 small">
+					<tr align="center">
+						<td>
+							<span class="text-muted"><?php echo lang('threads');?></span><br>
+							<b><?php echo $thread['user']['threads'];?></b>
+						</td>
+						<!--{hook thread_user_threads_after.htm}-->
+						<td>
+							<span class="text-muted"><?php echo lang('posts');?></span><br>
+							<b><?php echo $thread['user']['posts'];?></b>
+						</td>
+						<!--{hook thread_user_posts_after.htm}-->
+						<td>
+							<span class="text-muted"><?php echo lang('create_rank');?></span><br>
+							<b><?php echo $thread['user']['uid'];?></b>
+						</td>
+						<!--{hook thread_user_uid_after.htm}-->
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<!--{hook thread_user_after.htm}-->
+		
+	</div>
+</div>
+
+<!--{hook thread_end.htm}-->
+
+<?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+var jform = $('#quick_reply_form');
+var jsubmit = $('#submit');
+jform.on('submit', function() {
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			var s = '<ul>'+message+'</ul>';
+			var jli = $(s).find('li');
+			jli.insertBefore($('.postlist > .post').last());
+			jsubmit.button('reset');
+			$('#message').val('');
+			
+			// 楼层 +1
+			var jfloor = $('#newfloor');
+			jfloor.html(xn.intval(jfloor.html()) + 1);
+			
+			// 回复数 +1
+			var jposts = $('.posts');
+			jposts.html(xn.intval(jposts.html()) + 1);
+			
+		} else if(code < 0) {
+			$.alert(message);
+			jsubmit.button('reset');
+		} else {
+			jform.find('[name="'+code+'"]').alert(message).focus();
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+
+// 缩放图片，适应屏幕大小。
+function resize_image() {
+	var jmessagelist = $('div.message');
+	var first_width = jmessagelist.width(); // 815 : 746; //  734 746
+	jmessagelist.each(function() {
+		var jdiv = $(this);
+		var maxwidth = jdiv.attr('isfirst') ? first_width : jdiv.width(); //  734 746
+		var jmessage_width = Math.min(jdiv.width(), maxwidth);
+		jdiv.find('img, embed, iframe, video').each(function() {
+			var jimg = $(this);
+			var img_width = this.org_width;
+			var img_height = this.org_height;
+			if(!img_width) {
+				var img_width = jimg.attr('width');
+				var img_height = jimg.attr('height');
+				this.org_width = img_width;
+				this.org_height = img_height;
+			}
+			//var percent = xn.min(100, xn.ceil((img_width / jmessage_width) * 100));
+			if(img_width > jmessage_width) {
+				if(this.tagName == 'IMG') {
+					jimg.width(jmessage_width);
+					jimg.css('height', 'auto');
+					jimg.css('cursor', 'pointer');
+					jimg.on('click', function() {
+						//window.open(jimg.attr('src'));
+					});
+				} else {
+					jimg.width(jmessage_width);
+					var height = (img_height / img_width) * jimg.width();
+					jimg.height(height);
+				}
+			}
+		});
+	});
+}
+
+// 对于超宽的表格，加上响应式
+function resize_table() {
+	$('div.message').each(function() {
+		var jdiv = $(this);
+		jdiv.find('table').addClass('table').wrap('<div class="table-responsive"></div>'); 
+	});
+}
+
+$(function() {
+	resize_image();
+	resize_table();
+	$(window).on('resize', resize_image);
+});
+
+// 输入框自动伸缩
+
+var jmessage = $('#message');
+jmessage.on('focus', function() {if(jmessage.t) { clearTimeout(jmessage.t); jmessage.t = null; } jmessage.css('height', '8rem'); });
+jmessage.on('blur', function() {jmessage.t = setTimeout(function() { jmessage.css('height', '2.5rem');}, 1000); });
+
+$('li[data-active="fid-<?php echo $fid;?>"]').addClass('active');
+
+</script>
+
+<?php if($thread['closed'] && ($gid == 0 || $gid > 5)) { ?>
+<script>
+jmessage.val('<?php echo lang('thread_has_already_closed');?>').attr('readonly', 'readonly');
+</script>
+<?php } ?>
+<!--{hook thread_js.htm}-->

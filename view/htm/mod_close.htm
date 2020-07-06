@@ -1,0 +1,73 @@
+<?php include _include(APP_PATH.'view/htm/header.inc.htm');?>
+
+<div class="card">
+	<div class="card-header"><?php echo lang('close_thread');?></div>
+	<div class="card-body ajax-body">
+		<form action="<?php echo url("mod-close");?>" method="post" id="mod_close_form">
+			<div class="form-group row">
+				<label class="col-4 form-control-label text-right"><?php echo lang('total');?>：</label>
+				<div class="col-8">
+					<span class="total font-weight-bold text-danger"></span> <?php echo lang('piece');?>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-4 form-control-label text-right"><?php echo lang('close_status');?>：</label>
+				<div class="col-8">
+					<label class="custom-input custom-radio"><input type="radio" name="close" value="1" /><?php echo lang('close');?></label>　
+					<label class="custom-input custom-radio"><input type="radio" name="close" value="0" /><?php echo lang('open');?></label>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-4 form-control-label text-right"></label>
+				<div class="col-8">
+					<button type="submit" class="btn btn-primary mr-2" data-loading-text="<?php echo lang('submiting');?>..."><?php echo lang('confirm');?></button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo lang('close');?></button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+
+<script ajax-eval="true">
+
+// 接受传参
+var args = args || {jmodal: null, callback: null, arg: null};
+var jmodal = args.jmodal;
+var callback = args.callback;
+var arg = args.arg;
+var jthreadlist = $(arg);  // .threadlist
+var tidarr = jthreadlist.find('input[name="modtid"]').checked();
+
+var jform = $('#mod_close_form');
+var jsubmit = jform.find('button[type="submit"]');
+
+var jclose = jform.find('input[name="close"]');
+var jtotal = jform.find('span.total');
+jtotal.text(tidarr.length);
+
+jform.on('submit', function() {
+	var close = jclose.checked();
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serializeObject();
+	postdata.close = close;
+	postdata.tidarr = tidarr;
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			jsubmit.button(message);
+			setTimeout(function() {
+				if(jmodal) jmodal.modal('dispose');
+				if(callback) callback(message);
+				window.location.reload();
+			}, 1000);
+		} else {
+			alert(message);
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+</script>

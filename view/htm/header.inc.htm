@@ -1,0 +1,65 @@
+<?php $conf = G('conf');?>
+<?php $header = G('header');?>
+<?php $user = G('user');?>
+<?php $uid = G('uid');?>
+<?php $gid = G('gid');?>
+<?php $fid = G('fid');?>
+<?php $tid = G('tid');?>
+<?php $pid = G('pid');?>
+<?php $route = G('route');?>
+<?php $forumlist_show = G('forumlist_show');?>
+<?php $static_version = $conf['static_version'];?>
+<!--{hook header_start.htm}-->
+<!DOCTYPE html>
+<html lang="<?php echo $conf['lang'];?>">
+<head>
+	
+	<?php echo defined('BASE_HREF') ? '<base href="'.BASE_HREF.'" />' : '' ;?>
+	
+	<!--{hook header_meta_before.htm}-->
+	
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<?php if(!empty($header['keywords'])) { ?>
+	<meta name="keywords" content="<?php echo strip_tags($header['keywords']);?>" />
+	<?php } ?>
+
+	<meta name="description" content="<?php echo strip_tags($header['description']);?>" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" >
+	<meta http-equiv="Cache-Control" content="no-transform"/>
+	<meta http-equiv="Cache-Control" content="no-siteapp"/>
+	
+	<title><?php echo $header['title'];?></title>
+	
+	<!--{hook header_link_before.htm}-->
+	
+	<link rel="shortcut icon" href="<?php echo $conf['view_url'];?>img/favicon.ico" />
+	<link rel="icon" sizes="32x32" href="<?php echo $conf['view_url'];?>img/favicon.ico">
+	<link rel="Bookmark" href="<?php echo $conf['view_url'];?>img/favicon.ico" />
+	
+	<!--{hook header_bootstrap_before.htm}-->
+	<?php $bootstrap_css = !empty($bootstrap_css) ? $bootstrap_css : $conf['view_url']."css/bootstrap.css".$static_version; ?>
+	<link rel="stylesheet" href="<?php echo $bootstrap_css;?>">
+	<!--{hook header_bootstrap_after.htm}-->
+	
+	<!--{hook header_bootstrap_bbs_before.htm}-->
+	<?php $bootstrap_bbs_css = !empty($bootstrap_bbs_css) ? $bootstrap_bbs_css : $conf['view_url']."css/bootstrap-bbs.css".$static_version; ?>
+	<link rel="stylesheet" href="<?php echo $bootstrap_bbs_css;?>">
+	<!--{hook header_bootstrap_bbs_after.htm}-->
+	
+	<!--{hook header_link_after.htm}-->
+	
+</head>
+
+<body>
+	
+	<!--{hook header_body_start.htm}-->
+	
+	<?php include _include(APP_PATH.'view/htm/header_nav.inc.htm');?>
+
+	<main id="body">
+		<div class="container">
+	
+		<!--{hook body_start.htm}-->

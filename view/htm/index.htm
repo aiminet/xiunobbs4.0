@@ -1,0 +1,79 @@
+<?php include _include(APP_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook index_start.htm}-->
+
+<div class="row">
+	<div class="col-lg-9 main">
+		<!--{hook index_main_start.htm}-->
+		<div class="card card-threadlist">
+			<div class="card-header">
+				<ul class="nav nav-tabs card-header-tabs">
+					<li class="nav-item">
+						<a class="nav-link <?php echo $active == 'default' ? 'active' : '';?>" href="./<?php echo url("$route");?>"><?php echo lang('new_thread');?></a>
+					</li>
+					<!--{hook index_thread_list_nav_item_after.htm}-->
+				</ul>
+			</div>
+			<div class="card-body">
+				<ul class="list-unstyled threadlist mb-0">
+					<!--{hook index_threadlist_before.htm}-->
+					<?php include _include(APP_PATH.'view/htm/thread_list.inc.htm');?>
+					<!--{hook index_threadlist_after.htm}-->
+				</ul>
+			</div>
+		</div>
+		
+		<?php include _include(APP_PATH.'view/htm/thread_list_mod.inc.htm');?>
+		
+		<!--{hook index_page_before.htm}-->
+		<nav class="my-3"><ul class="pagination justify-content-center flex-wrap"><?php echo $pagination; ?></ul></nav>
+		<!--{hook index_page_end.htm}-->
+	</div>
+	<div class="col-lg-3 d-none d-lg-block aside">
+		<a role="button" class="btn btn-primary btn-block mb-3" href="<?php echo url('thread-create-'.$fid);?>"><?php echo lang('thread_create_new');?></a>
+		<!--{hook index_site_brief_before.htm}-->
+		<div class="card card-site-info">
+			<!--{hook index_site_brief_start.htm}-->
+			<div class="m-3">
+				<h5 class="text-center"><?php echo $conf['sitename'];?></h5>
+				<div class="small line-height-3"><?php echo $conf['sitebrief'];?></div>
+			</div>
+			<div class="card-footer p-2">
+				<table class="w-100 small">
+					<tr align="center">
+						<td>
+							<span class="text-muted"><?php echo lang('threads');?></span><br>
+							<b><?php echo $runtime['threads'];?></b>
+						</td>
+						<td>
+							<span class="text-muted"><?php echo lang('posts');?></span><br>
+							<b><?php echo $runtime['posts'];?></b>
+						</td>
+						<td>
+							<span class="text-muted"><?php echo lang('users');?></span><br>
+							<b><?php echo $runtime['users'];?></b>
+						</td>
+						<?php if($runtime['onlines'] > 0) { ?>
+						<td>
+							<span class="text-muted"><?php echo lang('online');?></span><br>
+							<b><?php echo $runtime['onlines'];?></b>
+						</td>
+						<?php } ?>
+					</tr>
+				</table>
+			</div>
+			<!--{hook index_site_brief_end.htm}-->
+		</div>
+		<!--{hook index_site_brief_after.htm}-->
+	</div>
+</div>
+
+<!--{hook index_end.htm}-->
+
+<?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+$('li[data-active="fid-0"]').addClass('active');
+</script>
+
+<!--{hook index_js.htm}-->

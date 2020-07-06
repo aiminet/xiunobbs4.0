@@ -1,0 +1,25 @@
+<?php include _include(APP_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook message_start.htm}-->
+
+<div class="row">
+	<div class="col-lg-8 mx-auto">
+		<div class="card mt-4">
+			<div class="card-body">
+				<h4 class="card-title text-center mb-0">
+					<i class="icon-<?php echo $code == 0 ? 'ok' : 'warning-sign'; ?>"></i> 
+					<!--{hook message_message_before.htm}-->
+					<?php echo is_array($message) ? print_r($message, 1) : $message;?>
+					<!--{hook message_message_after.htm}-->
+				</h4>
+				<!--{hook message_title_after.htm}-->
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{hook message_end.htm}-->
+
+<?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+
+<!--{hook message_js.htm}-->

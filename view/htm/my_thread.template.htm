@@ -1,0 +1,15 @@
+<template include="./view/htm/my.common.template.htm">
+	<slot name="my_nav">
+		<ul class="nav nav-tabs card-header-tabs">
+			<!--{hook my_nav_thread_before.htm}-->
+			<li class="nav-item">
+				<a class="nav-link" href="<?php echo url("my-thread");?>" data-active="my-thread"><?php echo lang('my_thread');?></a>
+			</li>
+			<!--{hook my_nav_thread_after.htm}-->
+		</ul>
+	</slot>
+</template>
+
+<script>
+$('a[data-active="menu-my-thread"]').addClass('active');
+</script>

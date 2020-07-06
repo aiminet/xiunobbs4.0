@@ -1,0 +1,50 @@
+<template include="./view/htm/my.template.htm">
+	<slot name="my_body">
+		<div class="col-lg-6 mx-auto">
+			<div class="form-group text-center">
+				<img id="avatar_img" class="logo-4" src="<?php echo $user['avatar_url'];?>">
+			</div>
+			<div class="form-group custom-file">
+				<input type="file" id="avatar_upload" accept="image/gif,image/jpeg,image/png,image/jpg,image/bmp"  class="upload custom-file-input" value="<?php echo lang('modify_avatar');?>"/>
+				<label class="custom-file-label" for="customFile">选择文件</label>
+			</div>
+			<div class="progress mt-2">
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"  id="avatar_progress"></div>
+			</div>
+		</div>
+	</slot>
+</template>
+
+<script>
+$('a[data-active="my"]').addClass('active');
+$('a[data-active="my-avatar"]').addClass('active');
+</script>
+
+<script>
+var javatar_upload = $('#avatar_upload');
+var jprogress = $('#avatar_progress');
+var jimg = $('#avatar_img');
+jprogress.hide();
+javatar_upload.on('change', function(e) {
+	var files = xn.get_files_from_event(e);
+	xn.upload_file(
+		files[0], 
+		xn.url('my-avatar'), 
+		{width: 128, height: 128, action: 'clip', filetype: 'jpg'}, 
+		function(code, message) {
+			if(code == 0) {
+				jimg.attr('src', message.url+'?'+Math.random());
+				$.alert('成功');
+				jprogress.delay(1000).hide();
+			} else {
+				$.alert(message);
+			}
+		}, 
+		function(percent) {
+			jprogress.show();
+			jprogress.width(percent+'%');
+		}
+	);
+});
+
+</script>

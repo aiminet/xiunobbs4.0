@@ -1,0 +1,31 @@
+<template include="./view/htm/my.common.template.htm">
+	<slot name="my_nav">
+		<ul class="nav nav-tabs card-header-tabs">
+			<!--{hook my_nav_start.htm}-->
+			
+			<!--{hook my_nav_profile_before.htm}-->
+			<li class="nav-item">
+				<a class="nav-link " href="<?php echo url("my");?>" data-active="my-profile"><?php echo lang('my_basic_profile');?></a>
+			</li>
+			<!--{hook my_nav_profile_after.htm}-->
+			
+			<!--{hook my_nav_password_before.htm}-->
+			<li class="nav-item">
+				<a class="nav-link" href="<?php echo url("my-password");?>" data-active="my-password"><?php echo lang('modify_password');?></a>
+			</li>
+			<!--{hook my_nav_password_after.htm}-->
+			
+			<!--{hook my_nav_avatar_before.htm}-->
+			<li class="nav-item">
+				<a class="nav-link" href="<?php echo url("my-avatar");?>" data-active="my-avatar"><?php echo lang('modify_avatar');?></a>
+			</li>
+			<!--{hook my_nav_avatar_after.htm}-->
+			
+			<!--{hook my_nav_end.htm}-->
+		</ul>
+	</slot>
+</template>
+
+<script>
+$('a[data-active="menu-my"]').addClass('active');
+</script>

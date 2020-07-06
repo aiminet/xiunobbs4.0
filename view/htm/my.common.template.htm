@@ -1,0 +1,62 @@
+<?php include _include(APP_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook my_common_start.htm}-->
+
+<div class="btn-group mb-3 d-lg-none" role="group" id="my_mobile_nav">
+
+	<!--{hook my_common_mobile_my_before.htm}-->
+	<a role="button" class="btn btn-secondary" data-active="menu-my" href="<?php echo url('my');?>">个人资料</a>
+	<!--{hook my_common_mobile_my_after.htm}-->
+	
+	<!--{hook my_common_mobile_my_thread_before.htm}-->
+	<a role="button" class="btn btn-secondary" data-active="menu-my-thread" href="<?php echo url('my-thread');?>">论坛帖子</a>
+	<!--{hook my_common_mobile_my_thread_after.htm}-->
+	
+</div>
+
+<div class="row">
+	<!-- 左侧菜单 -->
+	<div class="col-lg-2 hidden-md hidden-sm" id="my_aside">
+		<div class="card">
+			<div class="card-body text-center">
+				<!--{hook my_common_avatar_before.htm}-->
+				<img class="avatar-4" src="<?php echo $user['avatar_url'];?>">
+				<br><?php echo $user['username'];?>
+				<!--{hook my_common_username_after.htm}-->
+			</div>
+			<div class="list-group list-group-flush text-center">
+				<!--{hook my_common_my_before.htm}-->
+				<a href="<?php echo url('my');?>" class="list-group-item list-group-item-action" data-active="menu-my">个人资料</a>
+				<!--{hook my_common_my_after.htm}-->
+				
+				<!--{hook my_common_my_thread_before.htm}-->
+				<a href="<?php echo url('my-thread');?>" class="list-group-item list-group-item-action" data-active="menu-my-thread">论坛帖子</a>
+				<!--{hook my_common_my_thread_after.htm}-->
+				
+			</div>
+		</div>
+	</div>
+	<!-- 右侧内容 -->
+	<div class="col-lg-10" id="my_main">
+		<!--{hook my_common_main_card_before.htm}-->
+		<div class="card">
+			<div class="card-header">
+				<!--{hook my_common_my_nav_slot_before.htm}-->
+				<slot name="my_nav" />
+				<!--{hook my_common_my_nav_slot_after.htm}-->
+			</div>
+			<div class="card-body">
+				<!--{hook my_common_my_body_slot_before.htm}-->
+				<slot name="my_body" />
+				<!--{hook my_common_my_body_slot_after.htm}-->
+			</div>
+		</div>
+		<!--{hook my_common_main_card_after.htm}-->
+	</div>
+</div>
+
+<!--{hook my_common_end.htm}-->
+
+<?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+
+<!--{hook my_common_js.htm}-->

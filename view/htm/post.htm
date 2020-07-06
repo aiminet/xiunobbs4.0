@@ -1,0 +1,190 @@
+<?php include _include(APP_PATH.'view/htm/header.inc.htm');?>
+
+<?php
+	// 公用一个模板
+	if($route == 'thread' && $action == 'create') {
+		$form_title = lang('thread_create');
+		$form_action = url("thread-create");
+		$form_submit_txt = lang('thread_create');
+		$form_subject = '';
+		$form_message = '';
+		$form_doctype = 1;
+		$isfirst = 1;
+		$quotepid = 0;
+		$location = url("forum-'+jfid.checked()+'");
+		$filelist = array();
+	} elseif($route == 'post' && $action == 'update') {
+		$form_title = lang('post_update');
+		$form_action = url("post-update-$pid");
+		$form_submit_txt = lang('post_update');
+		$form_subject = $thread['subject'];
+		$form_message = $post['message'];
+		$form_doctype = $post['doctype'];
+		$isfirst = $post['isfirst'];
+		$quotepid = $post['quotepid'];
+		$location = url("thread-$tid");
+	} elseif($route == 'post' && $action == 'create') {
+		$form_title = lang('post_create');
+		$form_action = url("post-create-$tid-0");
+		$form_submit_txt = lang('post_create');
+		$form_subject = '';
+		$form_message = '';
+		$form_doctype = 1;
+		$isfirst = 0;
+		//$quotepid = 0;
+		$location = url("thread-$tid");
+		$filelist = array();
+	}
+	
+	// hook post_start_init.htm
+	
+	$filelist += (array)_SESSION('tmp_files');
+?>
+
+<!--{hook post_start.htm}-->
+
+<div class="row">
+	<div class="col-lg-10 mx-auto">
+		<div class="card">
+			<div class="card-header">
+				<?php echo $form_title; ?>
+			</div>
+			<div class="card-body">
+				<form action="<?php echo $form_action;?>" method="post" id="form">
+					<input type="hidden" name="doctype" value="<?php echo $form_doctype;?>" />
+					<input type="hidden" name="quotepid" value="<?php echo $quotepid;?>" />
+					
+					<!--{hook post_fid_before.htm}-->
+					<?php if($isfirst) { ?>
+					<div class="form-group">
+						<!--{hook post_fid_select_before.htm}-->
+						<select class="custom-select mr-1 w-auto" name="fid">
+							<?php foreach ($forumlist_allowthread as $forum) { ?>
+							<option value="<?php echo $forum['fid']; ?>"><?php echo $forum['name']; ?></option>
+							<?php } ?>
+						</select>
+						<!--{hook post_fid_select_after.htm}-->
+					</div>
+					<!--{hook post_subject_before.htm}-->
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="<?php echo lang('subject');?>" name="subject" value="<?php echo $form_subject;?>" id="subject">
+					</div>
+					<!--{hook post_subject_after.htm}-->
+					<?php } ?>
+					
+					<div class="form-group">
+						<textarea class="form-control" placeholder="<?php echo lang('message');?>" name="message" id="message" style="height: 300px;"><?php echo $form_message;?></textarea>
+					</div>
+					
+					<!--{hook post_message_after.htm}-->
+
+					<div class="d-flex justify-content-between">
+						<div class="attachlist_parent">
+							<a class="small text-left" href="javascript:void(0)">
+								<label class="addattach" id="addattach">
+									<i class="icon-folder-open-o"></i> 
+									<?php echo lang('add_attach');?>
+									<input type="file"  multiple="multiple" class="invisible" />
+								</label>
+							</a>
+							<?php echo post_file_list_html($filelist, TRUE);?>
+							<!--{hook post_bottom_right.htm}-->
+						</div>
+						<div class="text-right">
+							<button type="submit" class="btn btn-primary" id="submit" data-loading-text="<?php echo lang('submiting');?>..."> <?php echo $form_submit_txt;?> </button>
+							<!--{hook post_bottom_left.htm}-->
+						</div>
+					</div>
+					
+					<!--{hook post_submit_after.htm}-->
+					
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{hook post_end.htm}-->
+
+<?php include _include(APP_PATH.'view/htm/footer.inc.htm');?>
+<script>
+var jform = $('#form');
+var jsubmit = $('#submit');
+var jfid = jform.find('select[name="fid"]');
+jform.on('submit', function() {
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jsubmit.button(message).delay(1000).location('<?php echo $location;?>');
+		} else if(xn.is_number(code)) {
+			alert(message);
+			jsubmit.button('reset');
+		} else {
+			$.alert(message);
+			//jform.find('[name="'+code+'"]').alert(message).focus();
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+var jattachparent = $('.attachlist_parent');
+$('#addattach').on('change', function(e) {
+	var files = xn.get_files_from_event(e);
+	if (!files) return;
+	
+	// 并发下会 服务端 session 写入会有问题，由客户端控制改为串行
+	if (!jattachparent.find('.attachlist').length) {
+		jattachparent.append('<fieldset class="fieldset"><legend><?php echo lang('uploaded_attach');?></legend><ul class="attachlist"><ul></fieldset>');
+	}
+	
+	var jprogress = jattachparent.find('.progress');
+	if(!jprogress.length) {
+		jprogress = $('<div class="progress"><div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div></div>').appendTo(jattachparent);
+	}
+	jprogressbar = jprogress.find('.progress-bar');
+
+	$.each_sync(files, function(i, callback) {
+		var file = files[i];
+		xn.upload_file(file, xn.url('attach-create'), {is_image: 0}, function(code, message) {
+			if (code != 0) return $.alert(message);
+			// 把文件 append 到附件列表
+			var url = message.url;
+			var filetype = message.filetype;
+			var aid = message.aid;
+			$('.attachlist').append('<li aid="' + aid + '"><a href="' + message.url + '" target="_blank"><i class="icon filetype ' + filetype + '"></i> ' + message.orgfilename + '</a> <a href="javascript:void(0);" class="delete ml-2"><i class="icon-remove"></i> <?php echo lang('delete');?></a></li>');
+			callback();
+			jprogress.hide();
+		}, function(percent) {
+			percent = xn.intval(percent);
+			jprogressbar.css('width', percent+'%');
+			jprogressbar.text(percent+'%');
+			jprogress.show();
+			console.log('progress:'+ percent); 
+		});
+	});
+});
+
+// 删除附件
+jattachparent.on('click', 'a.delete', function() {
+	var jlink = $(this);
+	var jli = jlink.parents('li');
+	var aid = jli.attr('aid');
+	if(!window.confirm(lang.confirm_delete)) return false;
+	$.xpost(xn.url('attach-delete-'+aid), function(code, message) {
+		if(code != 0) return $.alert(message);
+		jlink.parent().remove();
+	});
+	return false;
+})
+
+jform.find('[name="fid"]').checked(<?php echo $fid;?>);
+
+$('li[data-active="fid-<?php echo $fid;?>"]').addClass('active');
+
+</script>
+
+<!--{hook post_js.htm}-->
