@@ -1,0 +1,207 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_thread_list_start.htm}-->
+
+<div class="row">
+	<div class="col-12">
+		<div class="btn-group mb-3" role="group">
+			<?php echo admin_tab_active($menu['thread']['tab'], 'list');?>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-12">
+		<form action="<?php echo url('thread-scan');?>" method="post" id="form">
+			<div class="card card-body">
+				<h4 class="card-title"><?php echo lang('search_condition');?></h4>
+				<div class="row">
+					<div class="col-md-6">
+						<fieldset class="form-group">
+							<label for="fid"><?php echo lang('forum');?>：</label>
+							<select class="form-control" name="fid" id="fid">
+								<option value="0"></option>
+								<?php foreach ($forumlist as $forum) { ?>
+								<option value="<?php echo $forum['fid']; ?>"><?php echo $forum['name']; ?></option>
+								<?php } ?>
+							</select>
+						</fieldset>
+					</div>
+					<div class="col-md-6">
+						<fieldset class="form-group">
+							<label for="keyword"><?php echo lang('keyword');?>：</label>
+							<input class="form-control" type="text" id="keyword" name="keyword" placeholder="<?php echo lang('keyword');?>" value="" />
+						</fieldset>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<fieldset class="form-group">
+							<label for="create_date_start"><?php echo lang('start_date');?>：</label>
+							<input class="form-control" type="date" id="create_date_start" name="create_date_start" placeholder="<?php echo lang('start_date');?>" value="" />
+						</fieldset>
+					</div>
+					<div class="col-md-6">
+						<fieldset class="form-group">
+							<label for="create_date_end"><?php echo lang('end_date');?>：</label>
+							<input class="form-control" type="date" id="create_date_end" name="create_date_end" placeholder="<?php echo lang('end_date');?>" value="" />
+						</fieldset>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<fieldset class="form-group">
+							<label for="create_date_end"><?php echo lang('thread_userip');?>：</label>
+							<input class="form-control" type="text" id="userip" name="userip" placeholder="<?php echo lang('thread_userip');?>" value="" />
+						</fieldset>
+					</div>
+					<div class="col-md-6">
+						<fieldset class="form-group">
+							<label for="create_date_end">UID / <?php echo lang('username');?>：</label>
+							<input class="form-control" type="text" id="uid" name="uid" placeholder="UID / <?php echo lang('username');?>" value="" />
+						</fieldset>
+					</div>
+				</div>
+				<!--{hook admin_thread_list_search_before.htm}-->
+				<div class="row">
+					<div class="col-md-6">
+						<button type="button" id="search" class="btn btn-primary" data-loading-text="<?php echo lang('searching');?>... "><?php echo lang('search');?></button>
+					</div>
+				</div>
+			</div>
+		</form>
+		
+		<div class="card">
+			<div class="card-body" id="search_result">
+				<div class="progress mt-4">
+					<div class="progress-bar progress-bar-striped progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="progress"></div>
+				</div>
+				<div class="progress mt-4">
+					<div class="progress-bar progress-bar-striped progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="op_progress"></div>
+				</div>
+				<?php echo lang('thread_search_result', array('n'=>'<b id="op_threads">0</b> / <b id="threads">0</b>'));?>, <a href="<?php echo url('thread-found');?>" target="_blank"><b><?php echo lang('click_to_view');?></b></a>
+				<p id="operation" class="hidden mt-4">
+					<button type="button" id="close" class="btn btn-primary" data-loading-text="<?php echo lang('operating');?>... "><i class="icon-lock"></i> <?php echo lang('close');?></button>
+					<button type="button" id="open" class="btn btn-primary" data-loading-text="<?php echo lang('operating');?>... "><i class="icon-unlock"></i> <?php echo lang('open');?></button>
+					<button type="button" id="delete" class="btn btn-danger" data-loading-text="<?php echo lang('operating');?>... "><i class="icon-remove"></i> <?php echo lang('delete');?></button>
+					<!--{hook admin_thread_list_delete_after.htm}-->
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{hook admin_thread_list_end.htm}-->
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+
+var jform = $('#form');
+var jsubmit = $('#search');
+var jopsubmit = $('#operation').find('button');
+var jsearch_result = $('#search_result');
+var jprogress = $('#progress');
+var jop_progress = $('#op_progress');
+var jthreads = $('#threads');
+var jop_threads = $('#op_threads');
+var joperation = $('#operation');
+var jfid = $('#fid');
+var threads = 0; // 符合的条数
+var page = 1;
+var pagesize = <?php echo $pagesize;?>;
+var totalpage = <?php echo $totalpage;?>;
+var totalpage_back = totalpage;
+var pagearr = [];
+for(var i=1; i <= totalpage; i++) pagearr.push(i);
+var forumlist = <?php echo xn_json_encode($forumlist_simple);?>;
+
+jfid.on('change', function() {
+	var fid = $(this).val();
+	if(fid == 0) {
+		totalpage = Math.max(1, totalpage_back);
+	} else {
+		var n = forumlist[fid]['threads'];
+		totalpage = Math.max(1, Math.ceil(n / pagesize));
+	}
+	pagearr = [];
+	for(var i=1; i <= totalpage; i++) pagearr.push(i);
+});
+
+// 点击搜索按钮
+jsubmit.on('click', function() {
+	jsubmit.button('loading');
+	var postdata = jform.serializeObject();
+	var url = jform.attr('action');
+	threads = 0;
+	jprogress.width(0);
+	$.each_sync(pagearr, function(i, callback) {
+		postdata.page = pagearr[i];
+		$.xpost(url, postdata, function(code, message) {
+			if(code == 0) {
+				var tids = message;
+				threads += tids.length;
+				jthreads.html(threads);
+				var percent = (postdata.page / totalpage) * 100;
+				jprogress.width( percent + '%');
+				if(postdata.page == totalpage) {
+					jsubmit.button('reset');
+					jopsubmit.button('reset');
+					joperation.show();
+					$.alert('<?php echo lang('search_complete');?>');
+				}
+			} else {
+				$.alert(message);
+			}
+			callback();
+		});
+	});
+	jsearch_result.show();
+	return false;
+});
+$('#nav li.nav-item-thread').addClass('active');
+
+// 点击操作按钮
+jopsubmit.on('click', function() {
+	var jthis = $(this);
+	var op = jthis.attr('id');
+	var url = xn.url('thread-operation-'+op);
+	var totalpage = Math.max(1, Math.ceil(threads / pagesize));
+	var jsubmit = jthis;
+	jsubmit.button('loading');
+	var postdata = {};
+	jop_progress.val(0);
+	var operation_threads = 0;
+	$.each_sync(pagearr, function(i, callback) {
+		postdata.page = pagearr[i];
+		$.xpost(url, postdata, function(code, message) {
+			if(code == 1) {
+				alert(message);
+			}
+			if(code == 0) {
+				var tids = message;
+				operation_threads += tids.length;
+				jop_threads.html(operation_threads);
+				
+				var percent = (postdata.page / totalpage) * 100;
+				jop_progress.width( percent + '%');
+				
+				if(postdata.page == totalpage) {
+					jsubmit.button('<?php echo lang('operator_complete');?>');
+					jopsubmit.button('disabled');
+					joperation.show();
+				}
+			} else {
+				$.alert(message);
+			}
+			callback();
+		});
+	});
+	jsearch_result.show();
+	return false;
+	
+});
+
+</script>
+
+<!--{hook admin_thread_list_js.htm}-->

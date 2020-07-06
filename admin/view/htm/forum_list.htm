@@ -1,0 +1,141 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_forum_list_start.htm}-->
+
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+				<form action="<?php echo url('forum-list');?>" method="post" id="form">
+					<div class="table-responsive arrlist">
+						<table class="table" style="min-width: 800px">
+							<thead>
+								<tr align="center">
+									<th width="80"><?php echo lang('forum_id');?></th>
+									<th width="60" align="left"><?php echo lang('forum_icon');?></th>
+									<th width="130"></th>
+									<th><?php echo lang('forum_name');?></th>
+									<th width="100"><?php echo lang('forum_rank');?></th>
+									<th width="100" class="text-center"><?php echo lang('forum_edit');?></th>
+									<th width="100" class="text-center"><?php echo lang('forum_delete');?></th>
+								</tr>
+							<thead>
+							<tbody>
+								<?php foreach($forumlist as $_fid=>$_forum) { ?>
+								<tr align="center" rowid="<?php echo $_fid; ?>">
+									<td class="50"><input type="text" class="form-control" name="fid[<?php echo $_fid;?>]" value="<?php echo $_forum['fid']; ?>"  placeholder="<?php echo lang('forum_id');?>" /></td>
+									<td align="left">
+										<img src="../<?php echo $_forum['icon_url']; ?>" class="forum" width="48" id="img_<?php echo $_fid;?>" />
+									</td>
+									<td>
+										<input type="file" multiple="multiple" accept=".jpg,.jpeg,.png,.gif,.bmp" class="form-control" name="icon[<?php echo $_fid;?>]" value="" data-assoc="img_<?php echo $_fid;?>" placeholder="<?php echo lang('forum_icon');?>" />
+									</td>
+									<td><input type="text" class="form-control" name="name[<?php echo $_fid;?>]" value="<?php echo $_forum['name']; ?>" placeholder="<?php echo lang('forum_name');?>" /></td>
+									<td><input type="text" class="form-control" name="rank[<?php echo $_fid;?>]" value="<?php echo $_forum['rank']; ?>" placeholder="<?php echo lang('forum_rank');?>" /></td>
+									<td><a class="btn row_edit" role="button" tabindex="0"><?php echo lang('forum_edit');?></a></td>
+									<td><a class="btn row_delete" role="button" tabindex="0"><?php echo lang('forum_delete');?></a></td>
+								</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+					</div>
+					<p><a role="button" class="btn row_add">[+]<?php echo lang('add_new_line');?></a></p>
+					<p class="text-center">
+						<button type="submit" class="btn btn-primary" id="submit" data-loading-text="<?php echo lang('submiting');?>..." style="width: 10rem;"><?php echo lang('confirm');?></button>
+					</p>
+				</form>
+				<p class="small text-grey"><?php echo lang('tips');?>：<?php echo lang('forum_edit_tip');?></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!--{hook admin_forum_list_end.htm}-->
+
+
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+
+
+//if(!debug) $.alert('<?php echo lang('forum_edit_tip');?>');
+
+var maxfid = <?php echo $maxfid;?>;
+
+var jform = $("#form");
+var jsubmit = $("#submit");
+
+jform.base64_encode_file(); // 对文件进行 base64 编码，处理文件上传，很方便
+
+jform.on('submit', function(){
+	jform.reset();
+	var postdata = jform.serialize();
+	jsubmit.button('loading');
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jsubmit.text(message).delay(3000).location();
+			return;
+		} else {
+			alert(message);
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+// 编辑
+var jarrlist = $('.arrlist');
+var jedit = $('a.row_edit');
+jarrlist.on('click', 'a.row_edit', function() {
+	var jthis = $(this);
+	var jtr = jthis.parents('tr');
+	var rowid = jtr.attr('rowid');
+	window.location = xn.url('forum-update-'+rowid);
+});
+
+// 删除
+var jdelete = $('a.row_delete');
+jarrlist.on('click', 'a.row_delete', function() {
+	var jthis = $(this);
+	var jtr = jthis.parents('tr');
+	var rowid = jtr.attr('rowid');
+	if(rowid == 1) {
+		$.alert('<?php echo lang('forum_cant_delete_system_reserved');?>');
+		return;
+	}
+	jtr.remove();
+	return false;
+});
+// 增加
+var jadd = $('a.row_add');
+jadd.on('click', function() {
+	var jclone = jarrlist.find('tr').last().clone();
+	jclone.insertAfter(jarrlist.find('tr').last());
+	var jfid = jclone.find('input[name^="fid"]');
+	//var rowid = xn.intval(jfid.val()) + 1;
+	var rowid = ++maxfid;
+	jfid.val(rowid);
+	jclone.attr('rowid', rowid);
+	
+	// 清空值
+	jclone.find('input').not('[name^="fid"]').val('');
+	
+	// 修改 [] 中的值为 rowid
+	jclone.find('input').attr_name_index(rowid);
+	
+	// 图片缩略
+	jclone.find('img.forum').attr('id', 'img_'+rowid).attr('src', '../view/img/forum.png');
+	jclone.find('input[type="file"]').attr('data-assoc', 'img_'+rowid);
+	
+	return false;
+});
+
+
+$('#nav li.nav-item-forum').addClass('active');
+
+</script>
+
+<!--{hook admin_forum_list_js.htm}-->

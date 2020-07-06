@@ -1,0 +1,27 @@
+<?php include INSTALL_PATH.'view/htm/header.inc.htm';?>
+
+
+<form action="index.php" method="post" id="form">
+
+<div class="row mt-3">
+	<div class="col-lg-8 offset-lg-2">
+		<div class="card">
+			<div class="card-body">
+				<h3 class="card-title"></h3>
+				<div class="form-group row">
+					<label class="col-sm-5 form-control-label">Choose Language (选择语言)：</label>
+					<div class="col-sm-5">
+						<?php echo $input['lang'];?>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="text-center m-3">
+			<button type="submit" class="btn btn-primary" id="submit" data-loading-text="Loding...">Next (下一步)</button>
+		</div>
+	</div>
+</div>
+
+</form>
+
+<?php include INSTALL_PATH.'view/htm/footer.inc.htm';?>

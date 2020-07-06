@@ -1,0 +1,52 @@
+<?php $conf= G('conf');?>
+<html lang="<?php echo $conf['lang'];?>">
+<head>
+	<?php $header = G('header');?>
+	<?php $user = G('user');?>
+	<?php $menu = G('menu');?>
+	<?php $forumlist_show = G('forumlist_show');?>
+	<?php $route = G('route');?>
+	<?php $conf = G('conf');?>
+	<?php $static_version = $conf['static_version'];?>
+
+	<!--{hook admin_header_meta_before.htm}-->
+	
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="XiunoBBS 4.0" />
+	<meta name="keywords" content="<?php echo strip_tags($header['keywords']);?>" />
+	<meta name="description" content="<?php echo strip_tags($header['description']);?>" />
+	<meta name="renderer" content="webkit" />
+	<title><?php echo $header['title'];?></title>
+	
+	<link rel="shortcut icon" href="../view/img/favicon.ico" />
+	<link rel="icon" sizes="32x32" href="../view/img/favicon.ico">
+	<link rel="Bookmark" href="../view/img/favicon.ico" />
+	
+	<!--{hook admin_header_bootstrap_before.htm}-->
+	<link rel="stylesheet" href="../view/css/bootstrap.css<?php echo $static_version;?>">
+	<!--{hook admin_header_bootstrap_after.htm}-->
+	
+	<!--{hook admin_header_bootstrap_bbs_before.htm}-->
+	<link rel="stylesheet" href="../view/css/bootstrap-bbs.css<?php echo $static_version;?>">
+	<!--{hook admin_header_bootstrap_bbs_after.htm}-->
+	
+	<!--{hook admin_header_admin_css_before.htm}-->
+	<link rel="stylesheet" href="view/css/admin.css<?php echo $static_version;?>">
+	<!--{hook admin_header_admin_css_after.htm}-->
+	
+	<!--{hook admin_header_css_after.htm}-->
+	
+</head>
+
+<body>
+
+	<!--{hook admin_header_body_start.htm}-->
+	
+	<?php include _include(ADMIN_PATH.'view/htm/header_nav.inc.htm');?>
+	
+	<main id="body">
+		<div class="container">
+	
+		<!--{hook admin_body_start.htm}-->
+		

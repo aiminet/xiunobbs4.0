@@ -1,0 +1,116 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_setting_smtp_start.htm}-->
+
+<div class="row">
+	<div class="col-12">
+		<div class="btn-group mb-3" role="group">
+			<?php echo admin_tab_active($menu['setting']['tab'], 'smtp');?>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<form action="<?php echo url('setting-smtp');?>" method="post" id="form">
+					<div class="table-responsive arrlist">
+						<table class="table">
+							<thead>
+								<tr>
+									<th><?php echo lang('email');?></th>
+									<th><?php echo lang('smtp_host');?></th>
+									<th width="100" class="text-center"><?php echo lang('port');?></th>
+									<th><?php echo lang('username');?></th>
+									<th><?php echo lang('password');?></th>
+									<th><?php echo lang('delete');?></th>
+								</tr>
+							<thead>
+							<tbody id="smtp_body">
+								<script type="text/plain" id="smtp_tpl">
+								<tr align="center" rowid="{rowid}">
+									<td><input type="text" class="form-control" name="email[]" value="{email}" placeholder="<?php echo lang('email');?>" /></td>
+									<td><input type="text" class="form-control" name="host[]" value="{host}"  placeholder="<?php echo lang('host');?>" /></td>
+									<td width="100" class="text-center"><input type="text" class="form-control" name="port[]" value="{port}" placeholder="<?php echo lang('port');?>"/></td>
+									<td><input type="text" class="form-control" name="user[]" value="{user}" placeholder="<?php echo lang('username');?>"  /></td>
+									<td><input type="password" class="form-control" name="pass[]" value="{pass}" placeholder="<?php echo lang('password');?>"  /></td>
+									<td><a class="btn row_delete" role="btn"><?php echo lang('delete');?></a></td>
+								</tr>
+								</script>
+							</tbody>
+						</table>
+					</div>
+					<p><a role="button" class="btn row_add">[+]<?php echo lang('add_new_line');?></a></p>
+					<p class="text-center">
+						<button type="submit" class="btn btn-primary" id="submit" data-loading-text="<?php echo lang('submiting');?>..." style="width: 10rem;"><?php echo lang('confirm');?></button>
+					</p>
+				</form>
+				<p>
+					注：<a href="https://bbs.xiuno.com/thread-19712.htm" target="_blank">如何设置 SMTP？ / How to set up SMTP ?</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{hook admin_setting_smtp_end.htm}-->
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+
+// 模板初始化
+var maxrowid = Math.max(xn.array_keys(smtplist));
+var smtplist = <?php echo xn_json_encode($smtplist);?>;
+var jsmtp_tpl = $('#smtp_tpl');
+var jsmtp_body = $('#smtp_body');
+var tpl = jsmtp_tpl.text();
+function row_add(v) {
+	var s = xn.template(tpl, v);
+	jsmtp_body.append(s);
+}
+$.each(smtplist, function(k, v) {
+	v.rowid = k;
+	row_add(v);
+});
+
+var jform = $("#form");
+var jsubmit = $("#submit");
+jform.on('submit', function(){
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jsubmit.text(message).delay(1000).button('reset');
+			return;
+		} else {
+			alert(message);
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+// 删除 delete
+var jarrlist = $('.arrlist');
+var jdelete = $('a.row_delete');
+jarrlist.on('click', 'a.row_delete', function() {
+	var jthis = $(this);
+	var jtr = jthis.parents('tr');
+	var rowid = jtr.attr('rowid');
+	jtr.remove();
+	return false;
+});
+
+// 增加 add
+var jadd = $('a.row_add');
+jadd.on('click', function() {
+	var v = {email: '', host: '', port: '', user: '', pass: '', rowid: ++maxrowid};
+	row_add(v);
+	return false;
+});
+
+
+$('#nav li.nav-item-setting').addClass('active');
+
+</script>
+
+<!--{hook admin_setting_smtp_js.htm}-->

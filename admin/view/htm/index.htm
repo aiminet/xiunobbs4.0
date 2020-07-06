@@ -1,0 +1,93 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_index_start.htm}-->
+
+<div class="row line-height-3">
+	<div class="col-12">
+				
+		<!--{hook admin_index_site_stat_before.htm}-->
+
+		<h3><?php echo lang('admin_index');?></h3>
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title"><?php echo lang('site_stat_info');?></h5>
+				<div class="row">
+					<div class="col-md-4"><span class="text-muted"><?php echo lang('threads');?>：</span><?php echo $stat['threads']; ?></div>
+					<div class="col-md-4"><span class="text-muted"><?php echo lang('posts');?>：</span><?php echo $stat['posts']; ?></div>
+					<div class="col-md-4"><span class="text-muted"><?php echo lang('users');?>：</span><?php echo $stat['users']; ?></div>
+					
+					<div class="col-md-4"><span class="text-muted"><?php echo lang('attachs');?>：</span><?php echo $stat['attachs']; ?></div>
+					<div class="col-md-4"><span class="text-muted"><?php echo lang('disk_free_space');?>：</span><?php echo $stat['disk_free_space']; ?></div>
+					<div class="col-md-4"><span class="text-muted"><?php echo lang('onlines');?>：</span><?php echo $runtime['onlines']; ?></div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<!--{hook admin_index_server_info_before.htm}-->
+		
+		<div class="card">
+			<div class="card-body">
+				<h5><?php echo lang('server_info');?> <a href="<?php echo url('index-phpinfo');?>"><small>[PHPINFO]</small></a></h5>
+				<div class="row">
+					<div class="col-md-6"><span class="text-muted"><?php echo lang('os');?>：</span><?php echo PHP_OS; ?></div>
+					<div class="col-md-6"><span class="text-muted">Web Server：</span><?php echo $info['SERVER_SOFTWARE']; ?></div>
+					<div class="col-md-6"><span class="text-muted">PHP：</span><?php echo PHP_VERSION; ?></div>
+					
+					<div class="col-md-6"><span class="text-muted"><?php echo lang('database');?>：</span><?php echo $conf['db']['type']; ?><small> (<?php echo $info['dbversion']; ?>)</small></div>
+					<div class="col-md-6"><span class="text-muted"><?php echo lang('post_max_size');?>：</span><?php echo $info['post_max_size']; ?></div>
+					<div class="col-md-6"><span class="text-muted"><?php echo lang('upload_max_filesize');?>：</span><?php echo $info['upload_max_filesize']; ?></div>
+					
+					<div class="col-md-6"><span class="text-muted"><?php echo lang('allow_url_fopen');?>：</span><?php echo $info['allow_url_fopen']; ?></div>
+					<div class="col-md-6"><span class="text-muted"><?php echo lang('safe_mode');?>：</span><?php echo $info['safe_mode']; ?></div>
+					<div class="col-md-6"><span class="text-muted"><?php echo lang('max_execution_time');?>：</span><?php echo $info['max_execution_time']; ?></div>
+					
+					<div class="col-md-6"><span class="text-muted"><?php echo lang('memory_limit');?>：</span><?php echo $info['memory_limit']; ?></div>
+					<div class="col-md-6"><span class="text-muted"><?php echo lang('client_ip');?>：</span><?php echo $ip; ?></div>
+					<div class="col-md-6"><span class="text-muted"><?php echo lang('server_ip');?>：</span><?php echo _SERVER('SERVER_ADDR'); ?></div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<!--{hook admin_index_team_before.htm}-->
+		
+		<div class="card">
+			<div class="card-body">
+				<h5><?php echo lang('dev_team_info');?></h5>
+				<div>Official Site: <a href="http://www.xiuno.com" target="_blank">http://www.xiuno.com/</a></div>
+				<div>Dev Team:  
+					<a href="http://bbs.xiuno.com/" target="_blank">axiuno</a>
+				</div>
+				<div>Thanks For: 
+					<a href="http://www.discuz.net/" target="_blank">cnteacher@discuz</a>
+					<a href="http://www.discuz.net/" target="_blank">Discuz! Team</a>
+					<a href="http://artery.cn/" target="_blank">Artery</a>
+					<a href="http://www.wooyun.org/" target="_blank">剑心@wooyun</a>
+					<a href="http://bbs.xiuno.com/" target="_blank">右键森林</a>
+					<a href="http://bbs.xiuno.com/" target="_blank">吴兆焕</a>
+					<a href="http://www.zd.hk/" target="_blank">杨永全</a>
+					<a href="http://www.huux.cc/" target="_blank">郑城</a>
+					<a href="http://www.baiup.com/" target="_blank">大象</a>
+				</div>
+			</div>
+		</div>
+		
+		<!--{hook admin_index_team_after.htm}-->
+		
+	</div>
+</div>
+
+<!--{hook admin_index_end.htm}-->
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+
+$('#nav li.home').addClass('active');
+
+</script>
+<?php echo $lastversion; ?>
+
+
+<!--{hook admin_index_js.htm}-->

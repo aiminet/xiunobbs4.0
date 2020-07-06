@@ -1,0 +1,181 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<div class="row">
+	<div class="col-12">
+		<div class="btn-group mb-3" role="group">
+			<?php echo admin_tab_active($menu['plugin']['tab'], $tab);?>
+		</div>
+		
+		<div class="card">
+			<div class="card-body">
+				<div class="media">
+					<div>
+						<img src="<?php echo $plugin['icon_url']; ?>" width="54" height="54" class="mr-3" />
+					</div>
+					<div class="media-body">
+						<h4><?php echo $plugin['name']; ?> v<?php echo $plugin['version']; ?></h4>
+						<p><?php echo $plugin['brief']; ?></p>
+					</div>
+				</div>
+				<hr />
+				<div class="row line-height-3">
+					<div class="col-md-6">
+						<span class="text-muted"><?php echo lang('plugin_dir');?></span>：
+						<?php echo $dir; ?>
+					</div>
+					
+					<div class="col-md-6">
+						<span class="text-muted"><?php echo lang('plugin_bbs_version');?></span>：
+						<?php echo $plugin['bbs_version']; ?>
+					</div>
+					
+					<?php if(!empty($plugin['pluginid'])) { ?>
+					<div class="col-md-6">
+						<span class="text-muted"><?php echo lang('price');?></span>：
+						<span class="price"><?php echo $plugin['official']['price']; ?>元</span>
+					</div>
+					
+					<div class="col-md-6">
+						<span class="text-muted"><?php echo lang('installs');?></span>：
+						<span><?php echo $plugin['installs']; ?></span>
+					</div>
+					
+					<!--
+					<div class="col-md-6">
+						<span class="text-muted"><?php echo lang('plugin_user_stars_fmt');?></span>：
+						<span><?php echo $plugin['user_stars_fmt']; ?></span>
+					</div>
+					-->
+
+					<div class="col-md-6">
+						<span class="text-muted"><?php echo lang('plugin_sells');?></span>：
+						<span><?php echo $plugin['sells']; ?></span>
+					</div>
+					
+					<div class="col-md-6">
+						<span class="text-muted"><?php echo lang('plugin_is_cert');?></span>：
+						<span><?php echo $plugin['is_cert_fmt']; ?></span>
+					</div>
+					
+					<div class="col-md-6">
+						<span class="text-muted"><?php echo lang('plugin_brief_url');?></span>：
+						<span><a href="<?php echo $plugin['brief_url']; ?>" target="_blank"><?php echo $plugin['brief_url']; ?></a></span>
+					</div>
+					
+					
+					<div class="col-md-6">
+						<span class="text-muted">客服QQ</span>：
+						<span class="font-weight-bold text-danger"><?php echo $plugin['qq']; ?></span>
+					</div>
+					
+					<?php  } ?>
+				</div>
+				
+				<hr />
+				
+				<?php if($errmsg) { ?>
+				<div class="alert alert-primary">
+					<?php echo $errmsg; ?>
+				</div>
+				<?php } ?>
+				
+				<?php if(!empty($plugin['pluginid']) && !empty($url)) { ?>
+				<div class="row">
+					<table width="60%" align="center">
+						<tr>
+							<td><?php if($plugin['img1_url']) { ?> <a href="<?php echo $plugin['img1_url'];?>" target="_blank"><img src="<?php echo $plugin['img1_url'];?>" width="100" height="120" class="border" /></a> <?php } ?></td>
+							<td><?php if($plugin['img2_url']) { ?> <a href="<?php echo $plugin['img2_url'];?>" target="_blank"><img src="<?php echo $plugin['img2_url'];?>" width="100" height="120" class="border" /></a> <?php } ?></td>
+							<td><?php if($plugin['img3_url']) { ?> <a href="<?php echo $plugin['img3_url'];?>" target="_blank"><img src="<?php echo $plugin['img3_url'];?>" width="100" height="120" class="border" /></a> <?php } ?></td>
+							<td><?php if($plugin['img4_url']) { ?> <a href="<?php echo $plugin['img4_url'];?>" target="_blank"><img src="<?php echo $plugin['img4_url'];?>" width="100" height="120" class="border" /></a> <?php } ?></td>
+						</tr>
+					</table>
+							
+				</div>
+				<hr />			
+				<div class="row">
+					<div class="col-12" style="text-align: center;">
+					
+						<!--
+							腾讯又改接口，努力克制自己不骂人~
+							<img alt="<?php echo lang('plugin_wechat_qrcode_pay');?>" src="http://paysdk.weixin.qq.com/qrcode.php?data=<?php echo urlencode($url);?>" style="width:150px; height:150px;"/>
+						-->
+						
+						<div id="qrcode_rabbit" data-thanks="感谢开发者(兔兔)提供解决方案！"></div>
+						
+						<br><?php echo lang('plugin_wechat_qrcode_pay');?>
+						<br><span class="price"><?php echo $plugin['official']['price']; ?>元</span>
+					</div>
+				</div>
+				<?php } ?>
+				<p class="text-center">
+					<?php if($download_url && !$islocal) { ?>
+						<a role="button" class="btn btn-primary download" href="<?php echo $download_url; ?>"><?php echo lang('download');?></a>
+					<?php } ?>
+					
+					<?php if($plugin['setting_url']) { ?>
+					<a role="button" class="btn btn-primary setting" href="<?php echo url("plugin-setting-$dir"); ?>"><?php echo lang('setting');?></a>
+					<?php } ?>
+					
+					<?php if($islocal && !$plugin['installed']) { ?>
+					<a role="button" class="btn btn-primary install" href="<?php echo url("plugin-install-$dir"); ?>"><?php echo lang('install');?></a>
+					<?php } ?>
+					
+					<?php if($plugin['installed'] && $plugin['enable']) { ?>
+					<a role="button" class="btn btn-secondary disable" href="<?php echo url("plugin-disable-$dir"); ?>"><?php echo lang('disable');?></a>
+					<?php } ?>
+					
+					<?php if($plugin['installed'] && !$plugin['enable']) { ?>
+					<a role="button" class="btn btn-secondary enable" href="<?php echo url("plugin-enable-$dir"); ?>"><?php echo lang('enable');?></a>
+					<?php } ?>
+					
+					<?php if($plugin['installed']) { ?>
+					<a role="button" class="btn btn-danger unstall confirm" data-confirm-text="<?php echo lang('plugin_unstall_confirm_tips', array('name'=>$plugin['name']));?>" href="<?php echo url("plugin-unstall-$dir"); ?>"><?php echo lang('unstall');?></a>
+					<?php } ?>
+					
+					<?php if($plugin['have_upgrade']) { ?>
+					<a role="button" class="btn btn-primary upgrade" href="<?php echo url("plugin-upgrade-$dir"); ?>"><?php echo lang('update');?></a>
+					<?php } ?>
+					
+				</p>
+		</div>
+				
+		<p class="mt-3 text-center">
+			<a role="button" class="btn btn-secondary" href="javascript:history.back();" style="width: 210px;"><?php echo lang('back');?></a>
+		</p>
+	</div>
+</div>
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+<script src="../view/js/jquery.qrcode.min.js"></script>
+<script>
+$('#nav li.nav-item-plugin').addClass('active');
+
+<?php if(!empty($plugin['pluginid']) && !empty($url) && !is_dir(APP_PATH."plugin/$dir")) { ?>
+
+// 定时查询 plugin.xiuno.com ，如果支付成功，则跳转到下载。
+var dir = '<?php echo $dir;?>';
+var url = "<?php echo $url;?>";
+ $('#qrcode_rabbit').qrcode({
+	render: "canvas", //设置渲染方式，有table和canvas，使用canvas方式渲染性能相对来说比较好
+	text: url, //扫描二维码后显示的内容,可以直接填一个网址，扫描二维码后自动跳向该链接
+	width: 200, //二维码的宽度
+	height: 200,
+	background: "#ffffff", //二维码的后景色
+	foreground: "#000000", //二维码的前景色
+	src: "",
+	imgWidth: 50,
+	imgHeight: 50
+});
+	
+var t = setInterval(function() {
+	$.xget(xn.url('plugin-is_bought-'+dir), function(code, message) {
+		if(code == 0) {
+			// 支付成功，跳转到下载。
+			clearInterval(t);
+			window.location = xn.url('plugin-download-'+dir);
+		}
+	});
+}, 5000);
+<?php } ?>
+
+</script>

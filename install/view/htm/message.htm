@@ -1,0 +1,16 @@
+<?php include INSTALL_PATH.'view/htm/header.inc.htm';?>
+
+<div class="row">
+	<div class="col-lg-8 offset-lg-2">
+		<div class="card m-3">
+			<div class="card-body">
+				<h4 class="card-title text-center">
+					<i class="icon-<?php echo $code == 0 ? 'ok' : 'warning-sign'; ?>" aria-hidden="true"></i> 
+					<?php echo $message;?>
+				</h4>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php include INSTALL_PATH.'view/htm/footer.inc.htm';?>

@@ -1,0 +1,38 @@
+<?php $conf = G('conf');?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="XiunoBBS 4.0" />
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<meta name="renderer" content="webkit" />
+	<title><?php echo lang('install_title');?></title>
+	
+	<link rel="shortcut icon" href="../view/img/favicon.ico" />
+	<link rel="icon" sizes="32x32" href="../view/img/favicon.ico">
+	<link rel="Bookmark" href="../view/img/favicon.ico" />
+	<link rel="stylesheet" href="../view/css/bootstrap.css">
+	<link rel="stylesheet" href="../view/css/bootstrap-icon.css">
+	<link rel="stylesheet" href="../view/css/bootstrap-bbs.css">
+</head>
+
+<body>
+	<div id="wrapper">
+	
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark" id="header">
+			<!-- pc navigation -->
+			<div class="container collapse navbar-toggleable-md">
+				<ul class="navnavbar navbar-nav" id="nav_pc">
+					<li class="nav-item">
+						<img src="../view/img/logo.png" class="logo-2">
+					</li>
+					<li class="nav-item">
+						<h4 class="mt-1 nav-link">Xiuno BBS <small class="text-danger">v<?php echo $conf['version'];?></small> <?php echo lang('install_guide');?></h4>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		
+		<div id="body" class="container">

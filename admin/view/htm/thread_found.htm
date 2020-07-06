@@ -1,0 +1,31 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_thread_found_start.htm}-->
+
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+				<ul class="list-unstyled threadlist mb-0">
+					<?php $mod_input_checked = 1;?>
+					<?php include _include(APP_PATH.'view/htm/thread_list.inc.htm');?>
+				</ul>
+			</div>
+		</div>
+		
+		<nav><ul class="pagination justify-content-center"><?php echo $pagination; ?></ul></nav>
+		
+	</div>
+</div>
+
+<!--{hook admin_thread_found_end.htm}-->
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+$('.threadlist').base_href('../');
+</script>
+
+
+<!--{hook admin_thread_found_js.htm}-->
+

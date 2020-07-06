@@ -1,0 +1,121 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_setting_base_start.htm}-->
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="btn-group mb-3" role="group">
+			<?php echo admin_tab_active($menu['setting']['tab'], 'base');?>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<!--
+				<h4 class="card-title"><?php echo lang('admin_setting_base');?></h4>
+				-->
+				<form action="<?php echo url('setting-base');?>" method="post" id="form">
+				
+					<!--{hook admin_setting_sitename_before.htm}-->
+					
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('sitename');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['sitename'];?>
+						</div>
+					</div>
+					
+					<!--{hook admin_setting_sitename_after.htm}-->
+					
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('sitebrief');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['sitebrief'];?>
+							<p class="mt-2 text-grey small"><?php echo lang('sitebrief_tips');?> </p>
+						</div>
+					</div>
+					
+					<!--{hook admin_setting_sitebrief_after.htm}-->
+					
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('runlevel');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['runlevel'];?>
+						</div>
+					</div>
+					
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('user_create_on');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['user_create_on'];?>
+						</div>
+					</div>
+					
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('user_create_email_on');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['user_create_email_on'];?>
+						</div>
+					</div>
+					
+					
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('user_resetpw_on');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['user_resetpw_on'];?>
+						</div>
+					</div>
+					
+					<!--{hook admin_setting_runlevel_after.htm}-->
+					
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('lang');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['lang'];?>
+						</div>
+					</div>
+										
+					<!--{hook admin_setting_base_lang_after.htm}-->
+
+					
+					<div class="form-group row">
+						<label for="inputPassword3" class="col-sm-2 form-control-label"></label>
+						<div class="col-sm-10">
+							<button type="submit" class="btn btn-primary btn-block" id="submit" data-loading-text="<?php echo lang('submiting');?>..."><?php echo lang('confirm');?></button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{hook admin_setting_base_end.htm}-->
+	
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+var jform = $('#form');
+var jsubmit = $('#submit');
+jform.on('submit', function() {
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jsubmit.text(message).delay(1000).button('reset');
+		} else if(xn.is_number(code)) {
+			alert(message);
+			jsubmit.button('reset');
+		} else {
+			jform.find('[name="'+code+'"]').alert(message).focus();
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+$('#nav li.nav-item-setting').addClass('active');
+
+</script>
+
+<!--{hook admin_setting_base_js.htm}-->

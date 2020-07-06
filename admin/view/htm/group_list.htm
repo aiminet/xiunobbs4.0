@@ -1,0 +1,126 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_group_list_start.htm}-->
+
+<div class="row">
+	<div class="col-12">
+		<div class="btn-group mb-3" role="group">
+			<?php echo admin_tab_active($menu['user']['tab'], 'group');?>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<form action="<?php echo url('group-list');?>" method="post" id="form">
+					<!--
+					<h5 class="card-title"><?php echo lang('group_list');?></h5>
+					-->
+					<div class="table-responsive arrlist">
+						<table class="table" style="min-width: 800px">
+							<thead>
+								<tr>
+									<th width="100"  class="text-center"><?php echo lang('group_id');?></th>
+									<th><?php echo lang('group_name');?></th>
+									<th class="text-center"><?php echo lang('group_credits_from');?></th>
+									<th class="text-center"><?php echo lang('group_credits_to');?></th>
+									<th class="text-center"><?php echo lang('edit');?></th>
+									<th class="text-center"><?php echo lang('delete');?></th>
+								</tr>
+							<thead>
+							<tbody>
+								<?php foreach($grouplist as $_gid=>$_group) { ?>
+								<tr align="center" rowid="<?php echo $_gid; ?>">
+									<td class="50"><input type="text" class="form-control" name="_gid[<?php echo $_gid;?>]" value="<?php echo $_group['gid']; ?>"  placeholder="<?php echo lang('group_id');?>" /></td>
+									<td><input type="text" class="form-control" name="name[<?php echo $_gid;?>]" value="<?php echo $_group['name']; ?>" placeholder="<?php echo lang('group_name');?>" /></td>
+									<td><input type="text" class="form-control" name="creditsfrom[<?php echo $_gid;?>]" value="<?php echo $_group['creditsfrom']; ?>" placeholder="<?php echo lang('group_credits_from');?>"/></td>
+									<td><input type="text" class="form-control" name="creditsto[<?php echo $_gid;?>]" value="<?php echo $_group['creditsto']; ?>" placeholder="<?php echo lang('group_credits_to');?>"  /></td>
+									<td><a class="btn row_edit" role="btn"><?php echo lang('edit');?></a></td>
+									<td><?php if(!in_array($_gid, $system_group)) { ?><a class="btn row_delete" role="btn"><?php echo lang('delete');?></a><?php } ?></td>
+								</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+					</div>
+					<p><a role="button" class="btn row_add">[+]<?php echo lang('add_new_line');?></a></p>
+					<p class="text-center">
+						<button type="submit" class="btn btn-primary" id="submit" data-loading-text="<?php echo lang('submiting');?>..." style="width: 10rem;"><?php echo lang('confirm');?></button>
+					</p>
+				</form>
+				<p class="small text-grey"><?php echo lang('tips');?>：<?php echo lang('forum_edit_tip');?></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{hook admin_group_list_end.htm}-->
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+
+//if(!debug) $.alert('<?php echo lang('group_edit_tips');?>', 4);
+
+var maxgid = <?php echo $maxgid;?>;
+
+var jform = $("#form");
+var jsubmit = $("#submit");
+jform.on('submit', function(){
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jsubmit.text(message).delay(3000).location();
+			return;
+		} else {
+			alert(message);
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+// 编辑
+var jarrlist = $('.arrlist');
+var jedit = $('a.row_edit');
+jarrlist.on('click', 'a.row_edit', function() {
+	var jthis = $(this);
+	var jtr = jthis.parents('tr');
+	var rowid = jtr.attr('rowid');
+	window.location = xn.url('group-update-'+rowid);
+});
+
+// 删除
+var jdelete = $('a.row_delete');
+jarrlist.on('click', 'a.row_delete', function() {
+	var jthis = $(this);
+	var jtr = jthis.parents('tr');
+	var rowid = jtr.attr('rowid');
+	jtr.remove();
+	return false;
+});
+// 增加
+var jadd = $('a.row_add');
+jadd.on('click', function() {
+	var jclone = jarrlist.find('tr').last().clone();
+	jclone.insertAfter(jarrlist.find('tr').last());
+	var jgid = jclone.find('input[name^="_gid"]');
+	//var rowid = xn.intval(jgid.val()) + 1;
+	var rowid = ++maxgid;
+	jgid.val(rowid);
+	jclone.attr('rowid', rowid);
+	
+	// 清空值
+	jclone.find('input').not('[name^="_gid"]').val('');
+	
+	// 修改 [] 中的值为 rowid
+	jclone.find('input').attr_name_index(rowid);
+	
+	return false;
+});
+
+
+$('#nav li.nav-item-user').addClass('active');
+
+</script>
+
+<!--{hook admin_group_list_js.htm}-->

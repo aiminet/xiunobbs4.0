@@ -1,0 +1,105 @@
+<?php include INSTALL_PATH.'view/htm/header.inc.htm';?>
+
+
+<form action="index.php?action=db" method="post" id="form">
+
+<div class="row mt-3">
+	<div class="col-lg-8 offset-lg-2">
+		<div class="card">
+			<div class="card-body">
+				<h3 class="card-title"><?php echo lang('step_2_title');?></h3>
+				<div class="form-group row">
+					<label class="col-sm-3 form-control-label"><?php echo lang('db_type');?>：</label>
+					<div class="col-sm-9">
+						<label><input type="radio" name="type" value="pdo_mysql" <?php echo ($pdo_mysql_support ? ' ' : ' disabled'); ?>  <?php echo ($pdo_mysql_support ? 'checked' : ' '); ?> /> pdo_mysql</label>
+						<label><input type="radio" name="type" value="mysql" <?php echo ($mysql_support ? ' ' : ' disabled'); ?> <?php echo ($mysql_support && !$pdo_mysql_support ? 'checked' : ' '); ?> /> mysql</label>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 form-control-label"><?php echo lang('db_engine');?>：</label>
+					<div class="col-sm-9">
+						<label><input type="radio" name="engine" value="myisam" checked /> MyISAM</label>
+						<label><input type="radio" name="engine" value="innodb" /> InnoDB</label>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 form-control-label"><?php echo lang('db_host');?>：</label>
+					<div class="col-sm-9">
+						<input type="text" name="host" class="form-control" value="127.0.0.1">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 form-control-label"><?php echo lang('db_name');?>：</label>
+					<div class="col-sm-9">
+						<input type="text" name="name" class="form-control" value="xiuno4">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 form-control-label"><?php echo lang('db_user');?>：</label>
+					<div class="col-sm-9">
+						<input type="text" name="user" class="form-control" value="root">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 form-control-label"><?php echo lang('db_pass');?>：</label>
+					<div class="col-sm-9">
+						<input type="text" name="password" class="form-control" value="root">
+					</div>
+				</div>
+				<h4><?php echo lang('step_3_title');?></h4>
+				<div class="form-group row">
+					<label class="col-sm-3 form-control-label"><?php echo lang('admin_email');?>：</label>
+					<div class="col-sm-9">
+						<input type="text" name="adminemail" class="form-control" value="admin@admin.com">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 form-control-label"><?php echo lang('admin_username');?>：</label>
+					<div class="col-sm-9">
+						<input type="text" name="adminuser" class="form-control" value="admin">
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-3 form-control-label"><?php echo lang('admin_pw');?>：</label>
+					<div class="col-sm-9">
+						<input type="password" name="adminpass" class="form-control" value="">
+					</div>
+				</div>
+				
+			</div>
+	
+			<div class="text-center m-3">
+				<button type="button" class="btn btn-secondary" onclick="history.back();"><?php echo lang('last_step');?></button>
+				<button type="submit" class="btn btn-primary" id="submit" <?php echo !$succeed ? 'disabled' : '';?> data-loading-text="<?php echo lang('installing_about_moment');?>..."><?php echo lang('next_step');?></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+</form>
+<?php include INSTALL_PATH.'view/htm/footer.inc.htm';?>
+
+
+<script>
+var jform = $('#form');
+var jsubmit = $('#submit');
+jform.on('submit', function() {
+	var postdata = jform.serialize();
+	jsubmit.button('loading');
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			alert(message);
+			window.location = '../';
+			//$.location('../');
+			jsubmit.button(message);
+		} else if(code < 0) {
+			alert(message);
+			jsubmit.button('reset');
+		} else {
+			jform.find('[name="'+code+'"]').alert(message).focus();
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+</script>

@@ -1,0 +1,24 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_message_start.htm}-->
+
+<div class="row">
+	<div class="col-lg-8 mx-auto">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title text-center">
+					<i class="icon-<?php echo $code == 0 ? 'ok' : 'warning-sign'; ?>"></i> 
+					<?php echo $message;?>
+					
+					<!--{hook admin_message_message_after.htm}-->
+				</h4>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{hook admin_message_end.htm}-->
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<!--{hook admin_message_js.htm}-->

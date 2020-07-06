@@ -1,0 +1,65 @@
+<!--{hook admin_footer_start.htm}-->
+
+<?php $db = G('db');?>
+<?php $time = G('time');?>
+<?php $ip = G('ip');?>
+<?php $useragent = G('useragent');?>
+<?php $starttime = G('starttime');?>
+<?php $forumlist = G('forumlist');?>
+<?php $forumarr = G('forumarr');?>
+<?php $fid = G('fid');?>
+<?php $conf = G('conf');?>
+<?php $static_version = $conf['static_version'];?>
+
+			<?php echo xn_debug_info();?>
+		</div>
+	</main>
+
+	<!--{hook admin_footer_footer_before.htm}-->
+	
+	<footer class="text-muted small bg-dark py-4" id="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<!--{hook footer_footer_left_start.htm}-->
+					Powered by <b>Xiuno BBS <span><?php echo $conf['version'];?></span></b>
+					<!--{hook footer_footer_left_end.htm}-->
+				</div>
+				<div class="col text-right">
+					<!--{hook footer_footer_right_start.htm}-->
+					Time: <b><?php echo substr(microtime(1) - $starttime, 0, 5);?></b>, SQL: <b><?php echo count($db->sqls);?></b>
+					<!--{hook footer_footer_right_end.htm}-->
+				</div>
+			</div>
+		</div>
+	</footer>
+	
+	<!--{hook admin_footer_footer_after.htm}-->
+	
+	<!--[if lt IE 9]>
+	<script>window.location = '<?php echo url('browser');?>';</script>
+	<![endif]-->
+	
+	<!--{hook admin_footer_js_before.htm}-->
+	
+	<script src="../lang/<?php echo $conf['lang'];?>/bbs.js<?php echo $static_version;?>"></script>
+	<script src="../view/js/jquery-3.1.0.js<?php echo $static_version;?>"></script>
+	<script src="../view/js/popper.js<?php echo $static_version;?>"></script>
+	<script src="../view/js/bootstrap.js<?php echo $static_version;?>"></script>
+	<script src="../view/js/xiuno.js<?php echo $static_version;?>"></script>
+	<script src="../view/js/bootstrap-plugin.js<?php echo $static_version;?>"></script>
+	<script src="../view/js/async.js<?php echo $static_version;?>"></script>
+	<script src="../view/js/form.js<?php echo $static_version;?>"></script>
+	<script>
+	var debug = DEBUG = <?php echo DEBUG; ?>;
+	var url_rewrite_on = <?php echo $conf['url_rewrite_on'];?>;
+	var fid = <?php echo $fid;?>;
+	</script>
+	<script src="../view/js/bbs.js<?php echo $static_version;?>"></script>
+	
+	<!--{hook admin_footer_js_after.htm}-->
+	
+</body>
+</html>
+
+<!--{hook admin_footer_end.htm}-->

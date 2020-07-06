@@ -1,0 +1,126 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<!--{hook admin_group_update_start.htm}-->
+
+<div class="row">
+	<div class="col-12">
+		<div class="btn-group mb-3" role="group">
+			<?php echo admin_tab_active($menu['user']['tab'], 'group');?>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<form action="<?php echo url("group-update-$_gid");?>" method="post" id="form">
+					<h4 class="card-title"><?php echo lang('group_edit');?> - <?php echo $_group['name'];?></h4>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('group_name');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['name'];?>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('group_credits_from');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['creditsfrom'];?>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('group_credits_to');?>：</label>
+						<div class="col-sm-10">
+							<?php echo $input['creditsto'];?>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('user_privileges');?>：</label>
+						<div class="col-sm-10">
+							<div class="table-responsive">
+								<table class="table"  style="min-width: 400px">
+									<tr class="text-center">
+										<td><?php echo lang('allow_view');?></td>
+										<td><?php echo lang('allow_thread');?></td>
+										<td><?php echo lang('allow_post');?></td>
+										<td><?php echo lang('allow_upload');?></td>
+										<td><?php echo lang('allow_download');?></td>
+									</tr>
+									<tr align="center">
+										<td><?php echo $input['allowread'];?></td>
+										<td><?php echo $input['allowthread'];?></td>
+										<td><?php echo $input['allowpost'];?></td>
+										<td><?php echo $input['allowattach'];?></td>
+										<td><?php echo $input['allowdown'];?></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+					<?php if($_group['gid'] >= 1 AND $_group['gid'] <= 5) { ?>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"><?php echo lang('admin_privilege');?>：</label>
+						<div class="col-sm-10">
+							<div class="table-responsive">
+								<table class="table" style="min-width: 600px">
+									<tr class="text-center">
+										<td><?php echo lang('top');?></td>
+										<td><?php echo lang('edit');?></td>
+										<td><?php echo lang('delete');?></td>
+										<td><?php echo lang('move');?></td>
+										<td><?php echo lang('ban_user');?></td>
+										<td><?php echo lang('delete_user');?></td>
+										<td><?php echo lang('view_user_info');?></td>
+									</tr>
+									<tr align="center">
+										<td><?php echo $input['allowtop'];?></td>
+										<td><?php echo $input['allowupdate'];?></td>
+										<td><?php echo $input['allowdelete'];?></td>
+										<td><?php echo $input['allowmove'];?></td>
+										<td><?php echo $input['allowbanuser'];?></td>
+										<td><?php echo $input['allowdeleteuser'];?></td>
+										<td><?php echo $input['allowviewip'];?></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+					<?php } ?>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label"></label>
+						<div class="col-sm-10">
+							<button type="submit" class="btn btn-primary btn-block" id="submit" data-loading-text="<?php echo lang('submiting');?>..."><?php echo lang('confirm');?></button>
+							<a role="button" class="btn btn-secondary btn-block mt-3" href="javascript:history.back();"><?php echo lang('back');?></a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--{hook admin_group_update_end.htm}-->
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+
+var jform = $("#form");
+var jsubmit = $("#submit");
+jform.on('submit', function(){
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jsubmit.text(message).delay(3000).button('reset');
+			return;
+		} else {
+			$.alert(message);
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+$('#nav li.nav-item-user').addClass('active');
+
+</script>
+
+<!--{hook admin_group_update_js.htm}-->
